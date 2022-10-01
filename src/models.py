@@ -8,35 +8,51 @@ from eralchemy import render_er
 
 Base = declarative_base()
 
-class Personaje(Base):
-    __tablename__ = 'personaje'
-    id = Column(Integer, primary_key=True)
-    name = Column (String(250), nullable=False)
-    gender = Column (String(250), nullable=True)
-    image = Column (String(250), nullable=False)
-    favoritos = relationship("Favorito")
-
-class Planeta(Base):
-    __tablename__ = 'planeta'
-    id = Column(Integer, primary_key=True)
-    name = Column (String(250), nullable=False)
-    image = Column (String(250), nullable=False)
-    favoritos = relationship("Favorito")
 
 class Usuario(Base):
     __tablename__ = 'usuario'
     id = Column(Integer, primary_key=True)
-    mail = Column (String(250), nullable=False)
+    username = Column (String(250), nullable=False)
     password = Column (String(250), nullable=False)
-    favoritos = relationship("Favorito")
+    posts = relationship("Post")
+    stories = relationship("Story")
+    comentarios = relationship("Comentario")
 
-class Favorito(Base):
+class Post(Base):
+    __tablename__ = 'post'
+    id = Column(Integer, primary_key=True)
+    image = Column (String(250), nullable=False)
+    texto = Column (String(250), nullable=True)
+    locacion = Column (String(250), nullable=True)
+    id_usuario = Column(Integer, ForeignKey('usuario.id'))
+    id_comentario = Column(Integer, ForeignKey('comentario.id'))
+    
+
+class Story(Base):
+    __tablename__ = 'story'
+    id = Column(Integer, primary_key=True)
+    image = Column (String(250), nullable=False)
+    id_usuario = Column(Integer, ForeignKey('usuario.id'))
+    id_comentario = Column(Integer, ForeignKey('comentario.id'))
+    
+
+class Comentario(Base):
+    __tablename__ = 'comentario'
+    id = Column(Integer, primary_key=True)
+    texto = Column (String(250), nullable=False)
+    id_post = Column(Integer, ForeignKey('post.id'))
+    id_story = Column(Integer, ForeignKey('story.id'))
+    id_usuario = Column(Integer, ForeignKey('usuario.id'))
+    posts = relationship("Post")
+    stories = relationship("Story")
+
+"""class Favorito(Base):
     __tablename__ = 'favorito'
     id = Column(Integer, primary_key=True)
     id_personaje = Column(Integer, ForeignKey('personaje.id'))
     id_planeta = Column(Integer, ForeignKey('planeta.id'))
     id_usuario = Column(Integer, ForeignKey('usuario.id'))
-    
+"""
 
 """class Person(Base):
     __tablename__ = 'person'
